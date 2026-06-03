@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Books</title>
+</head>
+<body>
+
+<h1>Book List</h1>
+
+<ul>
+{% for book in books %}
+    <li>
+        {{ book[1] }}
+        <a href="/delete_book/{{ book[0] }}">Delete</a>
+    </li>
+{% endfor %}
+</ul>
+<a href="/dashboard">Back to Dashboard</a>
+
+</body>
+</html>

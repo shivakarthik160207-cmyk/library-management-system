@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+</head>
+<body>
+
+<h1>Welcome {{ user }} 🎉</h1>
+<form action="/add_book" method="POST">
+    <input type="text"
+    name="title"
+    placeholder="Book title"
+    required>
+
+    <button type="submit">
+            Add Book
+    </button>
+</form>
+
+<br>
+<a href="/books">View books</a><br><br>
+
+<a href="/logout">Logout</a>
+
+</body>
+</html>
