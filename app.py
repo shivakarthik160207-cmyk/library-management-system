@@ -20,12 +20,14 @@ def init_db():
     """)
 
     cur.execute("""
-    CREATE TABLE IF NOT EXISTS books(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT
-    )
-    """)
-
+CREATE TABLE IF NOT EXISTS books(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    title TEXT,
+    username TEXT
+)
+""")
+    
+    
     conn.commit()
     conn.close()
 
@@ -104,9 +106,11 @@ def add_book():
     conn = sqlite3.connect("library.db")
     cur = conn.cursor()
 
+    username = session["user"]
+
     cur.execute(
-        "INSERT INTO books(title) VALUES (?)",
-        (title,)
+        "INSERT INTO books(title, username) VALUES (?, ?)",
+        (title, username)
     )
 
     conn.commit()
@@ -122,7 +126,11 @@ def books():
     conn = sqlite3.connect("library.db")
     cur = conn.cursor()
 
-    cur.execute("SELECT * FROM books")
+    cur.execute(
+       "SELECT * FROM books WHERE username=?",
+       (session["user"],)
+   )
+    
     all_books = cur.fetchall()
 
     conn.close()
@@ -168,9 +176,10 @@ def search():
     cur = conn.cursor()
 
     cur.execute(
-        "SELECT * FROM books WHERE title LIKE ?",
-        ("%" + q + "%",)
+       "SELECT * FROM books WHERE username=? AND title LIKE ?",
+        (session["user"], "%" + q + "%")
     )
+
 
     books = cur.fetchall()
     conn.close()
