@@ -1,10 +1,12 @@
+import os
+print("Current folder:", os.getcwd())
+
 from flask import Flask, render_template, request, redirect, url_for, session
 import sqlite3
 
 app = Flask(__name__)
 app.secret_key = "library_secret_key"
 
-# Create database tables
 def init_db():
     conn = sqlite3.connect("library.db")
     cur = conn.cursor()
@@ -154,6 +156,60 @@ def delete_book(id):
 
     return redirect("/books")
 
+@app.route("/search")
+def search():
+    if "user" not in session:
+        return redirect("/login")
+    
+    q = request.args.get("q")
+
+    conn = sqlite3.connect("library.db")
+    print("Database connection opened")
+    cur = conn.cursor()
+
+    cur.execute(
+        "SELECT * FROM books WHERE title LIKE ?",
+        ("%" + q + "%",)
+    )
+
+    books = cur.fetchall()
+    conn.close()
+
+    return render_template("books.html", books=books)
+
+@app.route("/edit_book/<int:id>", methods=["GET", "POST"])
+def edit_book(id):
+
+    conn = sqlite3.connect("library.db")
+    cur = conn.cursor()
+
+    if request.method == "POST":
+
+        title = request.form["title"]
+
+        cur.execute(
+            "UPDATE books SET title=? WHERE id=?",
+            (title, id)
+        )
+
+        conn.commit()
+        conn.close()
+
+        return redirect("/books")
+
+    cur.execute(
+        "SELECT * FROM books WHERE id=?",
+        (id,)
+    )
+
+    book = cur.fetchone()
+
+    conn.close()
+
+    return render_template(
+        "edit_book.html",
+        book=book
+    )
 
 if __name__ == "__main__":
     app.run(debug=True)

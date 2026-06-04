@@ -6,19 +6,37 @@
 <body>
 
 <h1>Welcome {{ user }} 🎉</h1>
+
+<h3>Add Book</h3>
+
 <form action="/add_book" method="POST">
     <input type="text"
-    name="title"
-    placeholder="Book title"
-    required>
+           name="title"
+           placeholder="Enter book title"
+           required>
 
     <button type="submit">
-            Add Book
+        Add Book
     </button>
 </form>
 
 <br>
-<a href="/books">View books</a><br><br>
+
+<form action="/search" method="GET">
+    <input type="text"
+           name="q"
+           placeholder="Search book">
+
+    <button type="submit">
+        Search
+    </button>
+</form>
+
+<br>
+
+<a href="/books">View Books</a>
+
+<br><br>
 
 <a href="/logout">Logout</a>
 
